@@ -6,10 +6,11 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import BiotechIcon from "@mui/icons-material/Biotech";
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import { Grid } from "@mui/material";
+import InfoCard from "./InfoCard";
 
 export default function MediaControlCard(props) {
-  const theme = useTheme();
 
   return (
     <Card
@@ -21,6 +22,12 @@ export default function MediaControlCard(props) {
         height: "25rem",
       }}
     >
+      <Box backgroundColor="#333" paddingLeft="0.5rem" width="15%">
+        <Typography variant="subtitle2" color="text.secondary">
+          # {props.number}
+        </Typography>
+      </Box>
+
       <Box display="flex" justifyContent="center" alignItems="center">
         <CardMedia
           component="img"
@@ -28,20 +35,16 @@ export default function MediaControlCard(props) {
           image={props.img_url}
         />
       </Box>
-      <CardContent sx={{ textAlign: "left", marginTop: "auto" }}>
-        <Typography component="div" variant="h4">
-          {props.mission_name}
-        </Typography>
-        <Typography variant="h5" color="text.secondary">
-          {props.rocket_name}
-        </Typography>
-        <Typography variant="subtitle2" color="text.secondary">
-          {props.date}
-        </Typography>
-        <Typography variant="subtitle2" color="text.secondary">
-          {props.time}
-        </Typography>
-      </CardContent>
+      <Box
+        sx={{
+          padding: "0.5rem",
+          background: "#282828",
+          width: "100%",
+          marginTop: "auto",
+        }}
+      >
+        <InfoCard props={props} />
+      </Box>
     </Card>
   );
 }

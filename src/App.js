@@ -80,6 +80,7 @@ function App() {
               return (
                 <ListItem key={item.key}>
                   <Card
+                    number={item.key}
                     mission_name={item.mission_name}
                     img_url={item.img_url}
                     rocket_name={item.rocket_name}
