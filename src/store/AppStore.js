@@ -27,7 +27,11 @@ const rocketSlice = createSlice({
 export const fetchRocketLaunchData = (pageNumber) => {
   return async (dispatch) => {
     const fetchData = async () => {
-      const response = await fetch(`https://api.spacexdata.com/v3/launches?limit=10&offset=${pageNumber-1}`);
+      const response = await fetch(
+        `https://api.spacexdata.com/v3/launches?limit=10&offset=${
+          pageNumber - 1
+        }`
+      );
 
       if (!response.ok) {
         throw new Error("Error fetching data");
@@ -45,7 +49,7 @@ export const fetchRocketLaunchData = (pageNumber) => {
         // console.log(arrayItem.rocket.rocket_name)
         rockets.push({
           key: arrayItem.flight_number,
-          mission_name:arrayItem.mission_name, 
+          mission_name: arrayItem.mission_name,
           rocket_name: arrayItem.rocket.rocket_name,
           img_url: arrayItem.links.mission_patch_small,
           launch_success: arrayItem.launch_success,
@@ -55,13 +59,54 @@ export const fetchRocketLaunchData = (pageNumber) => {
       });
 
       dispatch(rocketActions.replaceRockets({ rockets: rockets }));
-      console.log(rocketSlice.rockets);
+      // console.log(rocketSlice.rockets);
     } catch (error) {
       console.log("ERROR: " + error);
     }
   };
 };
 
+export const searchRocketLaunchData = (searchTerm) => {
+  return async (dispatch) => {
+    const fetchData = async () => {
+      const response = await fetch("https://api.spacexdata.com/v3/launches");
+
+      if (!response.ok) {
+        throw new Error("Error fetching data");
+      }
+
+      const data = await response.json();
+      return data;
+    };
+
+    try {
+      const rocketLaunchFetchedData = await fetchData();
+      const rockets = [];
+
+      rocketLaunchFetchedData.forEach((arrayItem) => {
+        const rocketName = arrayItem.rocket.rocket_name.toLowerCase()
+        const search = searchTerm.toLowerCase()
+        
+        if (rocketName.includes(search)) {
+          rockets.push({
+            key: arrayItem.flight_number,
+            mission_name: arrayItem.mission_name,
+            rocket_name: arrayItem.rocket.rocket_name,
+            img_url: arrayItem.links.mission_patch_small,
+            launch_success: arrayItem.launch_success,
+            launch_date_unix: arrayItem.launch_date_unix,
+            upcoming: arrayItem.upcoming,
+          });
+        }
+      });
+
+      dispatch(rocketActions.replaceRockets({ rockets: rockets }));
+      // console.log(rocketSlice.rockets);
+    } catch (error) {
+      console.log("ERROR: " + error);
+    }
+  };
+};
 const store = configureStore({
   reducer: { rocket: rocketSlice.reducer },
 });
