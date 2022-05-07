@@ -4,21 +4,22 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import Box from "@mui/material/Box";
 import Card from "./components/Card";
+import Appbar from "./components/Appbar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Container, CssBaseline, List, ListItem } from "@mui/material";
-import '@fontsource/open-sans/300.css'
-import '@fontsource/open-sans/400.css'
-import '@fontsource/open-sans/500.css'
-import '@fontsource/open-sans/700.css'
+import "@fontsource/open-sans/300.css";
+import "@fontsource/open-sans/400.css";
+import "@fontsource/open-sans/500.css";
+import "@fontsource/open-sans/700.css";
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
   typography: {
-      fontFamily: "'Open Sans', sans-serif",
-      textTransform: 'none',
-  }
+    fontFamily: "'Open Sans', sans-serif",
+    textTransform: "none",
+  },
 });
 
 function App() {
@@ -38,9 +39,10 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Container >
+      <Appbar/>
+      <Container>  
         <Box display="flex" justifyContent="center" alignItems="center">
-          <List >
+          <List>
             {data.map((item) => {
               return (
                 <ListItem>
@@ -54,13 +56,13 @@ function App() {
             })}
           </List>
         </Box>
-        <Box my={2} display="flex" justifyContent="center">
-          <Pagination
-            count={10}
-            size="small"
-            onChange={paginationChangeHandler}
-          />
-        </Box>
+          <Box my={2} display="flex" justifyContent="center">
+            <Pagination
+              count={10}
+              size="small"
+              onChange={paginationChangeHandler}
+            />
+          </Box>
       </Container>
     </ThemeProvider>
   );
