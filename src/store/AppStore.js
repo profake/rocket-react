@@ -1,7 +1,17 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 
 const initialState = {
-  rockets: [{ name: "meme" }],
+  rockets: [
+    {
+      key: 0,
+      mission_name: "Meme machine",
+      rocket_name: "meme",
+      img_url: null,
+      launch_success: true,
+      launch_date_unix: 1143239400,
+      upcoming: false,
+    },
+  ],
 };
 
 const rocketSlice = createSlice({
@@ -10,7 +20,6 @@ const rocketSlice = createSlice({
   reducers: {
     replaceRockets(state, action) {
       state.rockets = action.payload.rockets;
-      console.log("hiiii");
     },
   },
 });
@@ -34,7 +43,15 @@ export const fetchRocketLaunchData = () => {
 
       rocketLaunchFetchedData.forEach((arrayItem) => {
         // console.log(arrayItem.rocket.rocket_name)
-        rockets.push({ name: arrayItem.rocket.rocket_name });
+        rockets.push({
+          key: arrayItem.flight_number,
+          mission_name:arrayItem.mission_name, 
+          rocket_name: arrayItem.rocket.rocket_name,
+          img_url: arrayItem.links.mission_patch_small,
+          launch_success: arrayItem.launch_success,
+          launch_date_unix: arrayItem.launch_date_unix,
+          upcoming: arrayItem.upcoming,
+        });
       });
 
       dispatch(rocketActions.replaceRockets({ rockets: rockets }));
