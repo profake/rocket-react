@@ -63,7 +63,7 @@ function App() {
   }, [searchText]);
 
   useEffect(() => {
-    dispatch(fetchRocketLaunchData(pageNumber));
+    dispatch(fetchRocketLaunchData((pageNumber-1) * 10));
     console.log(data.length);
   }, [dispatch, pageNumber]);
 
@@ -75,12 +75,16 @@ function App() {
         <Box display="flex" justifyContent="center" alignItems="center">
           <List>
             {data.map((item) => {
+              const date = new Date(item.launch_date_unix * 1000).toLocaleDateString("en-US")
+              const time = new Date(item.launch_date_unix * 1000).toLocaleTimeString("en-US")
               return (
                 <ListItem key={item.key}>
                   <Card
                     mission_name={item.mission_name}
                     img_url={item.img_url}
                     rocket_name={item.rocket_name}
+                    date={date}
+                    time={time}
                   ></Card>
                 </ListItem>
               );

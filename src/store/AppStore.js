@@ -24,13 +24,11 @@ const rocketSlice = createSlice({
   },
 });
 
-export const fetchRocketLaunchData = (pageNumber) => {
+export const fetchRocketLaunchData = (offset) => {
   return async (dispatch) => {
     const fetchData = async () => {
       const response = await fetch(
-        `https://api.spacexdata.com/v3/launches?limit=10&offset=${
-          pageNumber - 1
-        }`
+        `https://api.spacexdata.com/v3/launches?limit=10&offset=${offset}`
       );
 
       if (!response.ok) {
