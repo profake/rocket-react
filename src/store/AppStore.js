@@ -24,10 +24,10 @@ const rocketSlice = createSlice({
   },
 });
 
-export const fetchRocketLaunchData = () => {
+export const fetchRocketLaunchData = (pageNumber) => {
   return async (dispatch) => {
     const fetchData = async () => {
-      const response = await fetch("https://api.spacexdata.com/v3/launches/");
+      const response = await fetch(`https://api.spacexdata.com/v3/launches?limit=10&offset=${pageNumber-1}`);
 
       if (!response.ok) {
         throw new Error("Error fetching data");
