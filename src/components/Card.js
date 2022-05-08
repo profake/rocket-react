@@ -18,7 +18,7 @@ export default function MediaControlCard(props) {
         display: "flex",
         flexDirection: "column",
         pt: 1,
-        width: "20rem",
+        width: "18rem",
         height: "25rem",
       }}
     >

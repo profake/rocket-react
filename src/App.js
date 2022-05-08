@@ -14,6 +14,7 @@ import {
   ButtonGroup,
   Container,
   CssBaseline,
+  Grid,
   List,
   ListItem,
 } from "@mui/material";
@@ -43,14 +44,14 @@ function App() {
   };
 
   const pageHandlerPrev = () => {
-    setPageNumber(Math.max(1, pageNumber-1))
-    window.scrollTo(0, 0)
+    setPageNumber(Math.max(1, pageNumber - 1));
+    window.scrollTo(0, 0);
   };
 
   const pageHandlerNext = () => {
-    setPageNumber(pageNumber+1)
-    window.scrollTo(0, 0)
-    console.log(pageNumber)
+    setPageNumber(pageNumber + 1);
+    window.scrollTo(0, 0);
+    console.log(pageNumber);
   };
 
   const isFirstRun = useRef(true);
@@ -63,7 +64,7 @@ function App() {
   }, [searchText]);
 
   useEffect(() => {
-    dispatch(fetchRocketLaunchData((pageNumber-1) * 10));
+    dispatch(fetchRocketLaunchData((pageNumber - 1) * 10));
     console.log(data.length);
   }, [dispatch, pageNumber]);
 
@@ -72,31 +73,36 @@ function App() {
       <CssBaseline />
       <Appbar search={searchHandler} />
       <Container>
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <List>
-            {data.map((item) => {
-              const date = new Date(item.launch_date_unix * 1000).toLocaleDateString("en-US")
-              const time = new Date(item.launch_date_unix * 1000).toLocaleTimeString("en-US")
-              return (
-                <ListItem key={item.key}>
-                  <Card
-                    number={item.key}
-                    mission_name={item.mission_name}
-                    img_url={item.img_url}
-                    rocket_name={item.rocket_name}
-                    date={date}
-                    time={time}
-                  ></Card>
-                </ListItem>
-              );
-            })}
-          </List>
-        </Box>
+        <Grid
+          paddingTop="10px"
+          container
+          rowSpacing={2}
+          columnSpacing={3}
+        >
+          {data.map((item) => {
+            const date = new Date(
+              item.launch_date_unix * 1000
+            ).toLocaleDateString("en-US");
+            const time = new Date(
+              item.launch_date_unix * 1000
+            ).toLocaleTimeString("en-US");
+            return (
+              <Grid item xs={12} md={4} align="center" key={item.key}>
+                <Card
+                  number={item.key}
+                  mission_name={item.mission_name}
+                  img_url={item.img_url}
+                  rocket_name={item.rocket_name}
+                  date={date}
+                  time={time}
+                ></Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+
         <Box my={2} display="flex" justifyContent="center">
-          <ButtonGroup
-            variant="text"
-            aria-label="primary button group"
-          >
+          <ButtonGroup variant="text" aria-label="primary button group">
             <Button onClick={pageHandlerPrev}>Prev</Button>
             <Button onClick={pageHandlerNext}>Next</Button>
           </ButtonGroup>
