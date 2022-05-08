@@ -46,7 +46,7 @@ function App() {
 
     // make it switch case
     if (filterTxt.valueOf() === "None") {
-      setFilterTimestamp(0);
+      dispatch(filterRocketLaunchData(0));
     } else if (filterTxt.valueOf() === "Last week") {
       date.setDate(date.getDate() - 7);
       setFilterTimestamp(date.getTime());

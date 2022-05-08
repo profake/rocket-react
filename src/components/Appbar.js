@@ -107,6 +107,14 @@ export default function PrimarySearchAppBar(props) {
     >
       <MenuItem
         onClick={() => {
+          props.filter("None")
+          handleMenuClose();
+        }}
+      >
+        None
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
           setShowFilterDialog(true);
           handleMenuClose();
         }}
