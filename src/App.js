@@ -3,26 +3,20 @@ import {
   fetchRocketLaunchData,
   searchRocketLaunchData,
   filterRocketLaunchData,
+  filterRocketLaunchDataByStatus,
+  filterRocketLaunchDataByUpcoming,
 } from "./store/AppStore";
 import { useDispatch, useSelector } from "react-redux";
-import Pagination from "@mui/material/Pagination";
-import Box from "@mui/material/Box";
 import Card from "./components/Card";
 import Appbar from "./components/Appbar";
+import NoData from "./components/NoData";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import {
-  Button,
-  ButtonGroup,
-  Container,
-  CssBaseline,
-  Grid,
-  List,
-  ListItem,
-} from "@mui/material";
+import { Container, CssBaseline, Grid } from "@mui/material";
 import "@fontsource/open-sans/300.css";
 import "@fontsource/open-sans/400.css";
 import "@fontsource/open-sans/500.css";
 import "@fontsource/open-sans/700.css";
+import { Box } from "@mui/system";
 
 const darkTheme = createTheme({
   palette: {
@@ -39,41 +33,41 @@ function App() {
   const data = useSelector((state) => state.rocket.rockets);
   const [searchText, setSearchText] = useState();
   const [filterTimestamp, setFilterTimestamp] = useState(0);
+  const [filterUpcoming, setFilterUpcoming] = useState(0);
+  const [filterStatus, setFilterStatus] = useState(0);
 
   const searchHandler = (searchTxt) => {
-    if (searchTxt.trim() !== "") setSearchText(searchTxt.trim());
+    setSearchText(searchTxt.trim());
   };
 
   const filterHandler = (filterTxt) => {
     var date = new Date();
+    console.log(filterTxt)
 
+    // make it switch case
     if (filterTxt.valueOf() === "None") {
       setFilterTimestamp(0);
-    } 
-    
-    else if (filterTxt.valueOf() === "Last week") {
+    } else if (filterTxt.valueOf() === "Last week") {
       date.setDate(date.getDate() - 7);
       setFilterTimestamp(date.getTime());
-    } 
-    
-    else if (filterTxt.valueOf() === "Last month") {
+    } else if (filterTxt.valueOf() === "Last month") {
       date.setMonth(date.getMonth() - 1);
       setFilterTimestamp(date.getTime());
-    } 
-    
-    else if (filterTxt.valueOf() === "Last year") {
+    } else if (filterTxt.valueOf() === "Last year") {
       date.setMonth(date.getMonth() - 12);
       setFilterTimestamp(date.getTime());
-    }
-    
-    else if (filterTxt.valueOf() === "Last two years") {
+    } else if (filterTxt.valueOf() === "Last two years") {
       date.setMonth(date.getMonth() - 24);
       setFilterTimestamp(date.getTime());
     }
+    else if (filterTxt.valueOf() === "status") {
+      setFilterStatus(!filterStatus)
+    } else if (filterTxt.valueOf() === "upcoming") {
+      setFilterUpcoming(!filterUpcoming)
+    }
 
-    console.log(date.getTime())
+    console.log(date.getTime());
   };
-
 
   const isFirstRun = useRef(true);
   useEffect(() => {
@@ -92,34 +86,65 @@ function App() {
     dispatch(fetchRocketLaunchData());
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(filterRocketLaunchDataByStatus(filterStatus));
+  }, [filterStatus]);
+
+  useEffect(() => {
+    dispatch(filterRocketLaunchDataByUpcoming(filterUpcoming));
+  }, [filterUpcoming]);
+
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Appbar filter={filterHandler} search={searchHandler} />
-      <Container>
-        <Grid paddingTop="10px" container rowSpacing={2} columnSpacing={3}>
-          {data.map((item) => {
-            const date = new Date(
-              item.launch_date_unix * 1000
-            ).toLocaleDateString("en-US");
-            const time = new Date(
-              item.launch_date_unix * 1000
-            ).toLocaleTimeString("en-US");
-            return (
-              <Grid item xs={12} md={4} align="center" key={item.key}>
-                <Card
-                  number={item.key}
-                  mission_name={item.mission_name}
-                  img_url={item.img_url}
-                  rocket_name={item.rocket_name}
-                  date={date}
-                  time={time}
-                ></Card>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Container>
+      {data.length === 0 ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+        >
+          {/* todo: add loading spinner */}
+          <NoData />
+        </Box>
+      ) : (
+        <Container>
+          <>
+            <Grid paddingTop="10px" container rowSpacing={2} columnSpacing={3}>
+              {data.map((item) => {
+                const date = new Date(
+                  item.launch_date_unix * 1000
+                ).toLocaleDateString("en-US");
+                const time = new Date(
+                  item.launch_date_unix * 1000
+                ).toLocaleTimeString("en-US");
+                return (
+                  <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    align="center"
+                    key={item.mission_name}
+                  >
+                    <Card
+                      number={item.key}
+                      mission_name={item.mission_name}
+                      img_url={item.img_url}
+                      rocket_name={item.rocket_name}
+                      date={date}
+                      time={time}
+                      upcoming={item.upcoming}
+                      launch_success={item.launch_success}
+                    ></Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </>
+        </Container>
+      )}
     </ThemeProvider>
   );
 }

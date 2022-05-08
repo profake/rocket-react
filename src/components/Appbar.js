@@ -57,7 +57,7 @@ export default function PrimarySearchAppBar(props) {
   const [searchText, setSearchText] = useState("");
 
   const searchTextChangeHandler = (event) => {
-    if (event.target.value.trim() !== "") setSearchText(event.target.value);
+    setSearchText(event.target.value);
   };
 
   useEffect(() => {

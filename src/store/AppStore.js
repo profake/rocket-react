@@ -21,7 +21,6 @@ const rocketSlice = createSlice({
   reducers: {
     replaceRockets(state, action) {
       if (action.payload.type === "init") {
-        console.log("Hio")
         state.allRockets = action.payload.rockets;
       }
 
@@ -87,7 +86,7 @@ export const searchRocketLaunchData = (searchTerm) => {
   };
 };
 
-export const filterRocketLaunchData = (unixTimestamp) => {
+export const filterRocketLaunchData = (unixTimestamp, opts) => {
   const filteredRockets = [];
 
   return (dispatch, getState) => {
@@ -98,6 +97,44 @@ export const filterRocketLaunchData = (unixTimestamp) => {
       const launchDate = arrayItem.launch_date_unix * 1000;
 
       if (launchDate >= unixTimestamp) {
+        filteredRockets.push(arrayItem);
+      }
+    });
+
+    dispatch(rocketActions.replaceRockets({ rockets: filteredRockets }));
+  };
+};
+
+export const filterRocketLaunchDataByStatus = (order) => {
+  const filteredRockets = [];
+
+  return (dispatch, getState) => {
+    const { rocket } = getState();
+    const rockets = rocket.allRockets;
+
+    rockets.forEach((arrayItem) => {
+      const status = arrayItem.launch_success;
+
+      if (status === order) {
+        filteredRockets.push(arrayItem);
+      }
+    });
+
+    dispatch(rocketActions.replaceRockets({ rockets: filteredRockets }));
+  };
+};
+
+export const filterRocketLaunchDataByUpcoming = (order) => {
+  const filteredRockets = [];
+
+  return (dispatch, getState) => {
+    const { rocket } = getState();
+    const rockets = rocket.allRockets;
+
+    rockets.forEach((arrayItem) => {
+      const upcoming = arrayItem.upcoming;
+
+      if (upcoming === order) {
         filteredRockets.push(arrayItem);
       }
     });

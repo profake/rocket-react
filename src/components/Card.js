@@ -30,9 +30,14 @@ export default function MediaControlCard(props) {
       <Box display="flex" justifyContent="center" alignItems="center">
         <CardMedia
           component="img"
-          sx={{ width: 150, height: "auto", marginTop:"2rem" }}
+          sx={{ width: 150, height: "auto", marginTop: "2rem" }}
           image={props.img_url}
         />
+      </Box>
+      <Box marginTop="auto" display="flex" justifyContent="center" alignItems="center">
+        <Typography variant="subtitle2" color="text.secondary">
+          {props.launch_success ? "Success" : "Failure"}
+        </Typography>
       </Box>
       <Box
         sx={{

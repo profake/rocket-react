@@ -27,14 +27,27 @@ const InfoCard = (props) => {
         </Typography>
       </Grid>
       <Grid textAlign="end" item xs={6}>
-        <Typography color={mutedWhite} variant="overline">Date</Typography>
+        <Typography color={mutedWhite} variant="overline">
+          Date
+        </Typography>
       </Grid>
       <Grid item xs={6}>
-          <Typography color={mutedColor} variant="subtitle2">{props.props.time}</Typography>
+        <Typography color={mutedColor} variant="subtitle2">
+          {props.props.time}
+        </Typography>
       </Grid>
       <Grid textAlign="end" item xs={6}>
-          <Typography color={mutedWhite} variant="overline">Time</Typography>
+        <Typography color={mutedWhite} variant="overline">
+          Time
+        </Typography>
       </Grid>
+      {props.props.upcoming && (
+        <Grid backgroundColor="#636363" textAlign="center" item xs={12}>
+          <Typography color="#fff" variant="overline">
+            Upcoming
+          </Typography>
+        </Grid>
+      )}
     </Grid>
   );
 };
