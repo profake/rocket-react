@@ -7,12 +7,12 @@ const InfoCard = (props) => {
 
   return (
     <Grid align="left" container rowSpacing={0.5}>
-      <Grid item xs={6}>
+      <Grid item xs={8}>
         <Typography component="div" variant="h5">
           {props.props.mission_name}
         </Typography>
       </Grid>
-      <Grid color={mutedWhite} textAlign="end" item xs={6}>
+      <Grid color={mutedWhite} textAlign="end" item xs={4}>
         <Typography variant="overline">MISSION</Typography>
       </Grid>
       <Grid item xs={6}>

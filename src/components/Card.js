@@ -11,7 +11,6 @@ import { Grid } from "@mui/material";
 import InfoCard from "./InfoCard";
 
 export default function MediaControlCard(props) {
-
   return (
     <Card
       sx={{
@@ -19,19 +18,19 @@ export default function MediaControlCard(props) {
         flexDirection: "column",
         pt: 1,
         width: "18rem",
-        height: "25rem",
+        height: "30rem",
       }}
     >
-      <Box backgroundColor="#333" paddingLeft="0.5rem" width="15%">
+      <Box backgroundColor="#333" paddingLeft="0.5rem" width="20%">
         <Typography variant="subtitle2" color="text.secondary">
-          # {props.number}
+          #{props.number}
         </Typography>
       </Box>
 
       <Box display="flex" justifyContent="center" alignItems="center">
         <CardMedia
           component="img"
-          sx={{ width: 150, height: "auto", pt: 5 }}
+          sx={{ width: 150, height: "auto", marginTop:"2rem" }}
           image={props.img_url}
         />
       </Box>

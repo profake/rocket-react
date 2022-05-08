@@ -105,6 +105,48 @@ export const searchRocketLaunchData = (searchTerm) => {
     }
   };
 };
+
+export const filterRocketLaunchData = (unixTimestamp) => {
+  return async (dispatch) => {
+    const fetchData = async () => {
+      const response = await fetch("https://api.spacexdata.com/v3/launches");
+
+      if (!response.ok) {
+        throw new Error("Error fetching data");
+      }
+
+      const data = await response.json();
+      return data;
+    };
+
+    try {
+      const rocketLaunchFetchedData = await fetchData();
+      const rockets = [];
+
+      rocketLaunchFetchedData.forEach((arrayItem) => {
+        const launchDate = arrayItem.launch_date_unix * 1000
+        
+        if (launchDate >= unixTimestamp) {
+          rockets.push({
+            key: arrayItem.flight_number,
+            mission_name: arrayItem.mission_name,
+            rocket_name: arrayItem.rocket.rocket_name,
+            img_url: arrayItem.links.mission_patch_small,
+            launch_success: arrayItem.launch_success,
+            launch_date_unix: arrayItem.launch_date_unix,
+            upcoming: arrayItem.upcoming,
+          });
+        }
+      });
+
+      dispatch(rocketActions.replaceRockets({ rockets: rockets }));
+      // console.log(rocketSlice.rockets);
+    } catch (error) {
+      console.log("ERROR: " + error);
+    }
+  };
+};
+
 const store = configureStore({
   reducer: { rocket: rocketSlice.reducer },
 });

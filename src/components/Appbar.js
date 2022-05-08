@@ -76,7 +76,7 @@ export default function PrimarySearchAppBar(props) {
   const isMenuOpen = Boolean(anchorEl);
 
   const handleFilterOnClose = (value) => {
-    console.log(value)
+    props.filter(value)
     setShowFilterDialog(false)
   }
 

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import {
   fetchRocketLaunchData,
   searchRocketLaunchData,
+  filterRocketLaunchData,
 } from "./store/AppStore";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
@@ -38,9 +39,40 @@ function App() {
   const data = useSelector((state) => state.rocket.rockets);
   const [pageNumber, setPageNumber] = useState(1);
   const [searchText, setSearchText] = useState();
+  const [filterTimestamp, setFilterTimestamp] = useState(0);
 
   const searchHandler = (searchTxt) => {
     if (searchTxt.trim() !== "") setSearchText(searchTxt.trim());
+  };
+
+  const filterHandler = (filterTxt) => {
+    var date = new Date();
+
+    if (filterTxt.valueOf() === "None") {
+      setFilterTimestamp(0);
+    } 
+    
+    else if (filterTxt.valueOf() === "Last week") {
+      date.setDate(date.getDate() - 7);
+      setFilterTimestamp(date.getTime());
+    } 
+    
+    else if (filterTxt.valueOf() === "Last month") {
+      date.setMonth(date.getMonth() - 1);
+      setFilterTimestamp(date.getTime());
+    } 
+    
+    else if (filterTxt.valueOf() === "Last year") {
+      date.setMonth(date.getMonth() - 12);
+      setFilterTimestamp(date.getTime());
+    }
+    
+    else if (filterTxt.valueOf() === "Last two years") {
+      date.setMonth(date.getMonth() - 24);
+      setFilterTimestamp(date.getTime());
+    }
+
+    console.log(date.getTime())
   };
 
   const pageHandlerPrev = () => {
@@ -64,6 +96,10 @@ function App() {
   }, [searchText]);
 
   useEffect(() => {
+    dispatch(filterRocketLaunchData(filterTimestamp));
+  }, [filterTimestamp]);
+
+  useEffect(() => {
     dispatch(fetchRocketLaunchData((pageNumber - 1) * 10));
     console.log(data.length);
   }, [dispatch, pageNumber]);
@@ -71,14 +107,9 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Appbar search={searchHandler} />
+      <Appbar filter={filterHandler} search={searchHandler} />
       <Container>
-        <Grid
-          paddingTop="10px"
-          container
-          rowSpacing={2}
-          columnSpacing={3}
-        >
+        <Grid paddingTop="10px" container rowSpacing={2} columnSpacing={3}>
           {data.map((item) => {
             const date = new Date(
               item.launch_date_unix * 1000
