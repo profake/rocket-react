@@ -37,7 +37,6 @@ const darkTheme = createTheme({
 function App() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.rocket.rockets);
-  const [pageNumber, setPageNumber] = useState(1);
   const [searchText, setSearchText] = useState();
   const [filterTimestamp, setFilterTimestamp] = useState(0);
 
@@ -75,16 +74,6 @@ function App() {
     console.log(date.getTime())
   };
 
-  const pageHandlerPrev = () => {
-    setPageNumber(Math.max(1, pageNumber - 1));
-    window.scrollTo(0, 0);
-  };
-
-  const pageHandlerNext = () => {
-    setPageNumber(pageNumber + 1);
-    window.scrollTo(0, 0);
-    console.log(pageNumber);
-  };
 
   const isFirstRun = useRef(true);
   useEffect(() => {
@@ -100,9 +89,8 @@ function App() {
   }, [filterTimestamp]);
 
   useEffect(() => {
-    dispatch(fetchRocketLaunchData((pageNumber - 1) * 10));
-    console.log(data.length);
-  }, [dispatch, pageNumber]);
+    dispatch(fetchRocketLaunchData());
+  }, [dispatch]);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -131,13 +119,6 @@ function App() {
             );
           })}
         </Grid>
-
-        <Box my={2} display="flex" justifyContent="center">
-          <ButtonGroup variant="text" aria-label="primary button group">
-            <Button onClick={pageHandlerPrev}>Prev</Button>
-            <Button onClick={pageHandlerNext}>Next</Button>
-          </ButtonGroup>
-        </Box>
       </Container>
     </ThemeProvider>
   );

@@ -1,6 +1,7 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 
 const initialState = {
+  allRockets: [],
   rockets: [
     {
       key: 0,
@@ -19,17 +20,20 @@ const rocketSlice = createSlice({
   initialState,
   reducers: {
     replaceRockets(state, action) {
+      if (action.payload.type === "init") {
+        console.log("Hio")
+        state.allRockets = action.payload.rockets;
+      }
+
       state.rockets = action.payload.rockets;
     },
   },
 });
 
-export const fetchRocketLaunchData = (offset) => {
+export const fetchRocketLaunchData = () => {
   return async (dispatch) => {
     const fetchData = async () => {
-      const response = await fetch(
-        `https://api.spacexdata.com/v3/launches?limit=10&offset=${offset}`
-      );
+      const response = await fetch("https://api.spacexdata.com/v3/launches");
 
       if (!response.ok) {
         throw new Error("Error fetching data");
@@ -44,7 +48,6 @@ export const fetchRocketLaunchData = (offset) => {
       const rockets = [];
 
       rocketLaunchFetchedData.forEach((arrayItem) => {
-        // console.log(arrayItem.rocket.rocket_name)
         rockets.push({
           key: arrayItem.flight_number,
           mission_name: arrayItem.mission_name,
@@ -55,9 +58,9 @@ export const fetchRocketLaunchData = (offset) => {
           upcoming: arrayItem.upcoming,
         });
       });
-
-      dispatch(rocketActions.replaceRockets({ rockets: rockets }));
-      // console.log(rocketSlice.rockets);
+      dispatch(
+        rocketActions.replaceRockets({ type: "init", rockets: rockets })
+      );
     } catch (error) {
       console.log("ERROR: " + error);
     }
@@ -65,85 +68,41 @@ export const fetchRocketLaunchData = (offset) => {
 };
 
 export const searchRocketLaunchData = (searchTerm) => {
-  return async (dispatch) => {
-    const fetchData = async () => {
-      const response = await fetch("https://api.spacexdata.com/v3/launches");
+  const searchResultRockets = [];
 
-      if (!response.ok) {
-        throw new Error("Error fetching data");
+  return (dispatch, getState) => {
+    const { rocket } = getState();
+    const rockets = rocket.allRockets;
+
+    rockets.forEach((arrayItem) => {
+      const rocketName = arrayItem.rocket_name.toLowerCase();
+      const search = searchTerm.toLowerCase();
+  
+      if (rocketName.includes(search)) {
+        searchResultRockets.push(arrayItem);
       }
+    });
 
-      const data = await response.json();
-      return data;
-    };
-
-    try {
-      const rocketLaunchFetchedData = await fetchData();
-      const rockets = [];
-
-      rocketLaunchFetchedData.forEach((arrayItem) => {
-        const rocketName = arrayItem.rocket.rocket_name.toLowerCase()
-        const search = searchTerm.toLowerCase()
-        
-        if (rocketName.includes(search)) {
-          rockets.push({
-            key: arrayItem.flight_number,
-            mission_name: arrayItem.mission_name,
-            rocket_name: arrayItem.rocket.rocket_name,
-            img_url: arrayItem.links.mission_patch_small,
-            launch_success: arrayItem.launch_success,
-            launch_date_unix: arrayItem.launch_date_unix,
-            upcoming: arrayItem.upcoming,
-          });
-        }
-      });
-
-      dispatch(rocketActions.replaceRockets({ rockets: rockets }));
-      // console.log(rocketSlice.rockets);
-    } catch (error) {
-      console.log("ERROR: " + error);
-    }
+    dispatch(rocketActions.replaceRockets({ rockets: searchResultRockets }));
   };
 };
 
 export const filterRocketLaunchData = (unixTimestamp) => {
-  return async (dispatch) => {
-    const fetchData = async () => {
-      const response = await fetch("https://api.spacexdata.com/v3/launches");
+  const filteredRockets = [];
 
-      if (!response.ok) {
-        throw new Error("Error fetching data");
+  return (dispatch, getState) => {
+    const { rocket } = getState();
+    const rockets = rocket.allRockets;
+
+    rockets.forEach((arrayItem) => {
+      const launchDate = arrayItem.launch_date_unix * 1000;
+
+      if (launchDate >= unixTimestamp) {
+        filteredRockets.push(arrayItem);
       }
+    });
 
-      const data = await response.json();
-      return data;
-    };
-
-    try {
-      const rocketLaunchFetchedData = await fetchData();
-      const rockets = [];
-
-      rocketLaunchFetchedData.forEach((arrayItem) => {
-        const launchDate = arrayItem.launch_date_unix * 1000
-        
-        if (launchDate >= unixTimestamp) {
-          rockets.push({
-            key: arrayItem.flight_number,
-            mission_name: arrayItem.mission_name,
-            rocket_name: arrayItem.rocket.rocket_name,
-            img_url: arrayItem.links.mission_patch_small,
-            launch_success: arrayItem.launch_success,
-            launch_date_unix: arrayItem.launch_date_unix,
-            upcoming: arrayItem.upcoming,
-          });
-        }
-      });
-
-      dispatch(rocketActions.replaceRockets({ rockets: rockets }));
-      // console.log(rocketSlice.rockets);
-    } catch (error) {
-      console.log("ERROR: " + error);
-    }
+    dispatch(rocketActions.replaceRockets({ rockets: filteredRockets }));
   };
 };
 
