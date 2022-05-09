@@ -1,17 +1,10 @@
 import * as React from "react";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import BiotechIcon from "@mui/icons-material/Biotech";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import ArticleIcon from "@mui/icons-material/Article";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import { Grid } from "@mui/material";
 import InfoCard from "./InfoCard";
-import IconButton from "@mui/material/IconButton";
+import LaunchInfo from "./LaunchInfo";
 
 export default function MediaControlCard(props) {
   const handleWikiOnClick = () => window.open(props.wiki_url, "_blank");
@@ -40,43 +33,14 @@ export default function MediaControlCard(props) {
           image={props.img_url}
         />
       </Box>
-      <Box
-        marginTop="auto"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Typography variant="subtitle2" color="text.secondary">
-          {props.launch_success ? "Success" : "Failure"}
-        </Typography>
-      </Box>
-      <Box
-        marginTop="auto"
-        display="flex"
-        justifyContent="start"
-        alignItems="start"
-      >
-        {props.wiki_url !== null && (
-          <IconButton onClick={handleWikiOnClick}>
-            <ArticleIcon />
-          </IconButton>
-        )}
-        {props.yt_url !== null && (
-          <IconButton onClick={handleYtOnClick}>
-            <YouTubeIcon />
-          </IconButton>
-        )}
-      </Box>
-      <Box
-        sx={{
-          padding: "0.5rem",
-          background: "#282828",
-          width: "100%",
-          marginTop: "auto",
-        }}
-      >
-        <InfoCard props={props} />
-      </Box>
+      {!props.upcoming && (
+        <LaunchInfo
+          props={props}
+          handleWiki={handleWikiOnClick}
+          handleYt={handleYtOnClick}
+        />
+      )}
+      <InfoCard props={props} />
     </Card>
   );
 }

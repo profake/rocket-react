@@ -6,9 +6,17 @@ const InfoCard = (props) => {
   const mutedWhite = "#999";
 
   return (
-    <Grid align="left" container rowSpacing={0.5}>
+    <Grid
+      padding="0.5rem"
+      backgroundColor="#282828"
+      width="100%"
+      marginTop="auto"
+      align="left"
+      container
+      rowSpacing={0.5}
+    >
       <Grid item xs={8}>
-        <Typography component="div" variant="h5">
+        <Typography component="div" variant="h6">
           {props.props.mission_name}
         </Typography>
       </Grid>
@@ -16,13 +24,13 @@ const InfoCard = (props) => {
         <Typography variant="overline">MISSION</Typography>
       </Grid>
       <Grid item xs={6}>
-        <Typography variant="h6">{props.props.rocket_name}</Typography>
+        <Typography variant="h7">{props.props.rocket_name}</Typography>
       </Grid>
       <Grid color={mutedWhite} textAlign="end" item xs={6}>
         <Typography variant="overline">Rocket</Typography>
       </Grid>
       <Grid item xs={6}>
-        <Typography color={mutedColor} variant="subtitle1">
+        <Typography color={mutedColor} variant="subtitle2">
           {props.props.date}
         </Typography>
       </Grid>
