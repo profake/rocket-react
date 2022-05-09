@@ -85,22 +85,27 @@ function App() {
       return;
     }
     dispatch(searchRocketLaunchData(searchText));
+    window.scrollTo(0, 0)
   }, [searchText]);
 
   useEffect(() => {
     dispatch(filterRocketLaunchData(filterTimestamp));
+    window.scrollTo(0, 0)
   }, [filterTimestamp]);
 
   useEffect(() => {
     dispatch(fetchRocketLaunchData());
+    window.scrollTo(0, 0)
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(filterRocketLaunchDataByStatus(filterStatus));
+    window.scrollTo(0, 0)
   }, [filterStatus]);
 
   useEffect(() => {
     dispatch(filterRocketLaunchDataByUpcoming(filterUpcoming));
+    window.scrollTo(0, 0)
   }, [filterUpcoming]);
 
 
