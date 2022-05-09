@@ -142,7 +142,7 @@ export default function PrimarySearchAppBar(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       {showFilterDialog && <ChoiceDialog onClose={handleFilterOnClose}/>}
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography
             variant="h6"
