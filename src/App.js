@@ -66,6 +66,12 @@ function App() {
         date.setMonth(date.getMonth() - 24);
         setFilterTimestamp(date.getTime());
         break;
+      case "status":
+        setFilterStatus(!filterStatus)
+        break;
+      case "upcoming":
+        setFilterUpcoming(!filterUpcoming)
+        break;
       default:
     }
     console.log(date.getTime());
@@ -134,6 +140,8 @@ function App() {
                       number={item.key}
                       mission_name={item.mission_name}
                       img_url={item.img_url}
+                      wiki_url={item.wiki_url}
+                      yt_url={item.yt_url}
                       rocket_name={item.rocket_name}
                       date={date}
                       time={time}
