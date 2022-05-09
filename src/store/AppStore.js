@@ -5,14 +5,15 @@ const initialState = {
   rockets: [
     {
       key: 0,
-      mission_name: "Meme machine",
-      rocket_name: "meme",
+      mission_name: "Abc",
+      rocket_name: "test",
       img_url: null,
       launch_success: true,
       launch_date_unix: 1143239400,
       upcoming: false,
     },
   ],
+  dataLoaded: false,
 };
 
 const rocketSlice = createSlice({
@@ -22,6 +23,7 @@ const rocketSlice = createSlice({
     replaceRockets(state, action) {
       if (action.payload.type === "init") {
         state.allRockets = action.payload.rockets;
+        state.dataLoaded = true;
       }
 
       state.rockets = action.payload.rockets;

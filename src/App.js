@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Card from "./components/Card";
 import Appbar from "./components/Appbar";
 import NoData from "./components/NoData";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Container, CssBaseline, Grid } from "@mui/material";
 import "@fontsource/open-sans/300.css";
@@ -31,6 +32,7 @@ const darkTheme = createTheme({
 function App() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.rocket.rockets);
+  const hasDataLoaded = useSelector((state) => state.rocket.dataLoaded);
   const [searchText, setSearchText] = useState();
   const [filterTimestamp, setFilterTimestamp] = useState(0);
   const [filterUpcoming, setFilterUpcoming] = useState(0);
@@ -44,34 +46,35 @@ function App() {
     var date = new Date();
     console.log(filterTxt)
 
-    // make it switch case
-    if (filterTxt.valueOf() === "None") {
-      dispatch(filterRocketLaunchData(0));
-    } else if (filterTxt.valueOf() === "Last week") {
-      date.setDate(date.getDate() - 7);
-      setFilterTimestamp(date.getTime());
-    } else if (filterTxt.valueOf() === "Last month") {
-      date.setMonth(date.getMonth() - 1);
-      setFilterTimestamp(date.getTime());
-    } else if (filterTxt.valueOf() === "Last year") {
-      date.setMonth(date.getMonth() - 12);
-      setFilterTimestamp(date.getTime());
-    } else if (filterTxt.valueOf() === "Last two years") {
-      date.setMonth(date.getMonth() - 24);
-      setFilterTimestamp(date.getTime());
+    switch(filterTxt.valueOf()) {
+      case "None":
+        dispatch(filterRocketLaunchData(0));
+        break;
+      case "Last week":
+        date.setDate(date.getDate() - 7);
+        setFilterTimestamp(date.getTime());
+        break;
+      case "Last month":
+        date.setMonth(date.getMonth() - 1);
+        setFilterTimestamp(date.getTime());
+        break;
+      case "Last year":
+        date.setMonth(date.getMonth() - 12);
+        setFilterTimestamp(date.getTime());
+        break;
+      case "Last two years":
+        date.setMonth(date.getMonth() - 24);
+        setFilterTimestamp(date.getTime());
+        break;
+      default:
     }
-    else if (filterTxt.valueOf() === "status") {
-      setFilterStatus(!filterStatus)
-    } else if (filterTxt.valueOf() === "upcoming") {
-      setFilterUpcoming(!filterUpcoming)
-    }
-
     console.log(date.getTime());
   };
 
   const isFirstRun = useRef(true);
   useEffect(() => {
     if (isFirstRun.current) {
+      console.log("Called")
       isFirstRun.current = false;
       return;
     }
@@ -106,8 +109,7 @@ function App() {
           alignItems="center"
           minHeight="100vh"
         >
-          {/* todo: add loading spinner */}
-          <NoData />
+          {hasDataLoaded ? <NoData/> : <LoadingSpinner />}
         </Box>
       ) : (
         <Container>
